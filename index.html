@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bay Area Flea Market Guide — May 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #F5EDE0;
+    --orange: #C44B24;
+    --darkbrown: #3B2314;
+    --gold: #D4A030;
+    --blue: #2E86AB;
+    --midbrown: #6B4423;
+    --past: #9a948c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { background: var(--cream); }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    color: var(--darkbrown);
+    padding: 48px 24px 64px;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .header { margin-bottom: 24px; }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 76px;
+    color: var(--orange);
+    line-height: 0.95;
+    letter-spacing: -1.5px;
+  }
+
+  .header h2 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 36px;
+    color: var(--darkbrown);
+    line-height: 1.1;
+    margin-top: 4px;
+  }
+
+  .header h3 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 400;
+    font-style: italic;
+    font-size: 24px;
+    color: var(--midbrown);
+    margin-top: 10px;
+  }
+
+  /* legend at top */
+  .legend {
+    margin-bottom: 28px;
+    padding: 18px 22px;
+    background: rgba(59, 35, 20, 0.07);
+    border-radius: 14px;
+  }
+
+  .legend-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--midbrown);
+    margin-bottom: 10px;
+  }
+
+  .legend-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    color: var(--darkbrown);
+    line-height: 1.45;
+  }
+  .legend-row:last-child { margin-bottom: 0; }
+
+  .swatch {
+    flex: 0 0 16px;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    margin-top: 2px;
+  }
+  .swatch.t-blue { background: var(--blue); }
+  .swatch.t-gold { background: var(--gold); }
+  .swatch.t-red { background: var(--orange); }
+
+  /* schedule */
+  .schedule { margin-top: 8px; }
+
+  .day {
+    display: flex;
+    align-items: stretch;
+    margin-bottom: 14px;
+    gap: 12px;
+  }
+
+  .day-label {
+    flex: 0 0 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
+    font-size: 17px;
+    letter-spacing: 2.5px;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    padding: 16px 0;
+    text-transform: uppercase;
+  }
+
+  .day-label.t-red { background: var(--orange); }
+  .day-label.t-gold { background: var(--gold); }
+  .day-label.t-blue { background: var(--blue); }
+
+  .day-label.t-gold-red {
+    background: linear-gradient(to top,
+      var(--gold) 0%, var(--gold) 50%,
+      var(--orange) 50%, var(--orange) 100%);
+  }
+
+  .day-label.t-blue-gold-red {
+    background: linear-gradient(to top,
+      var(--blue) 0%, var(--blue) 33.333%,
+      var(--gold) 33.333%, var(--gold) 66.666%,
+      var(--orange) 66.666%, var(--orange) 100%);
+  }
+
+  .events {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+    position: relative;
+  }
+
+  /* gantt-style bars: --ml = left offset %, --w = width % (timeline 5am-7pm = 14 hrs) */
+  .event {
+    margin-left: var(--ml, 0);
+    width: var(--w, 100%);
+    border-radius: 12px;
+    padding: 7px 14px 7px 7px;
+    color: white;
+    line-height: 1.2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    cursor: pointer;
+    transition: transform .12s ease, box-shadow .12s ease, filter .12s ease;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .event:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(0,0,0,0.14); }
+  .event:active { transform: translateY(0); }
+
+  .event.t-red { background: var(--orange); }
+  .event.t-gold { background: var(--gold); }
+  .event.t-blue { background: var(--blue); }
+
+  .event-icon {
+    flex: 0 0 30px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .event-icon svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+  }
+
+  .event-text { min-width: 0; overflow: hidden; }
+
+  .event-name {
+    font-weight: 700;
+    font-size: 14.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .event-hours {
+    font-weight: 500;
+    font-size: 12.5px;
+    margin-top: 1px;
+    opacity: 0.95;
+    white-space: nowrap;
+  }
+
+  /* past events: gray + strikethrough */
+  .event.past {
+    background: var(--past);
+    opacity: 0.6;
+    text-decoration: line-through;
+    text-decoration-thickness: 1.5px;
+    pointer-events: auto;
+  }
+  .event.past:hover { transform: none; box-shadow: none; filter: brightness(1.04); }
+  .event.past .event-icon { background: rgba(255, 255, 255, 0.22); }
+
+  .day.past .day-label {
+    background: var(--past) !important;
+    opacity: 0.65;
+  }
+
+  /* modal */
+  .modal {
+    position: fixed; inset: 0; z-index: 1000;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .18s ease;
+  }
+  .modal.open { opacity: 1; pointer-events: auto; }
+  .modal-backdrop {
+    position: absolute; inset: 0;
+    background: rgba(20, 12, 6, 0.55);
+    backdrop-filter: blur(2px);
+  }
+  .modal-card {
+    position: relative;
+    background: var(--cream);
+    border-radius: 18px;
+    padding: 28px 28px 24px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    transform: scale(0.96);
+    transition: transform .18s ease;
+  }
+  .modal.open .modal-card { transform: scale(1); }
+
+  .modal-tag {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .modal-tag.t-red { background: var(--orange); }
+  .modal-tag.t-gold { background: var(--gold); }
+  .modal-tag.t-blue { background: var(--blue); }
+
+  .modal-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: var(--darkbrown);
+    line-height: 1.2;
+    padding-right: 28px;
+    margin-bottom: 10px;
+  }
+
+  .modal-row {
+    font-size: 14px;
+    color: var(--midbrown);
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .modal-row strong { color: var(--darkbrown); font-weight: 700; }
+
+  .modal-status {
+    font-size: 12.5px;
+    color: var(--midbrown);
+    margin: 12px 0 18px;
+    font-style: italic;
+  }
+  .modal-status.past { color: #8a7a68; }
+
+  .modal-maps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 18px;
+    background: var(--orange);
+    color: white;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 15px;
+    transition: background .15s ease, transform .12s ease;
+  }
+  .modal-maps:hover { background: #a73e1c; }
+  .modal-maps:active { transform: scale(0.99); }
+  .modal-maps svg { width: 18px; height: 18px; }
+
+  .modal-note {
+    font-size: 11.5px;
+    color: var(--midbrown);
+    text-align: center;
+    margin-top: 12px;
+    opacity: 0.8;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 10px; right: 14px;
+    background: none;
+    border: 0;
+    font-size: 28px;
+    line-height: 1;
+    color: var(--midbrown);
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+  .modal-close:hover { color: var(--darkbrown); background: rgba(0,0,0,0.05); }
+
+  @media (max-width: 540px) {
+    body { padding: 32px 14px 48px; }
+    .header h1 { font-size: 52px; }
+    .header h2 { font-size: 26px; }
+    .header h3 { font-size: 18px; }
+    .day-label { flex: 0 0 42px; font-size: 14px; letter-spacing: 1.5px; }
+    .event-icon { flex: 0 0 26px; width: 26px; height: 26px; }
+    .event-icon svg { width: 14px; height: 14px; }
+    .event-name { font-size: 13px; }
+    .event-hours { font-size: 11.5px; }
+    .event { padding: 6px 10px 6px 6px; gap: 8px; }
+    .modal-card { padding: 24px 22px 20px; }
+    .modal-name { font-size: 21px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- icon symbol library -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="icon-storefront" viewBox="0 0 24 24">
+      <path d="M3.5 4h17l1.4 4.5a2.4 2.4 0 0 1-2.3 3.1 2.4 2.4 0 0 1-2.3-1.7 2.4 2.4 0 0 1-4.6 0 2.4 2.4 0 0 1-4.6 0 2.4 2.4 0 0 1-4.6 0A2.4 2.4 0 0 1 2.1 8.5L3.5 4Z" fill="currentColor"/>
+      <path d="M4 12.5V20h16v-7.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+      <path d="M9 20v-4.5h6V20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="icon-california" viewBox="0 0 24 24">
+      <path d="M6.5 2.2 8.6 2 9.4 4.6l1.9.2 1.7 1.9 1.9 1 2.1 4.4 1.3 4.1-.6 4-2 1.6-3 .2-2-2.6-3.6-3.2-1.7-3.6-.9-3.4-1-3.6Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-utensils" viewBox="0 0 24 24">
+      <path d="M7 2.5c-.4 0-.7.3-.7.7v4.6c0 .4-.3.7-.7.7s-.7-.3-.7-.7V3.2a.7.7 0 1 0-1.4 0v5.5c0 1.5 1.1 2.7 2.5 2.9V21a1 1 0 1 0 2 0V11.6c1.4-.2 2.5-1.4 2.5-2.9V3.2a.7.7 0 1 0-1.4 0v4.6c0 .4-.3.7-.7.7s-.7-.3-.7-.7V3.2c0-.4-.3-.7-.7-.7Z" fill="currentColor"/>
+      <path d="M16.7 2.6c-1.7.6-2.9 2.6-2.9 4.9 0 2 1 3.7 2.5 4.3V21a1 1 0 1 0 2 0V3a.5.5 0 0 0-.7-.5l-.9.1Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-sun" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="4.2" fill="currentColor"/>
+      <g stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+        <line x1="12" y1="2.2" x2="12" y2="4.4"/>
+        <line x1="12" y1="19.6" x2="12" y2="21.8"/>
+        <line x1="2.2" y1="12" x2="4.4" y2="12"/>
+        <line x1="19.6" y1="12" x2="21.8" y2="12"/>
+        <line x1="5.1" y1="5.1" x2="6.6" y2="6.6"/>
+        <line x1="17.4" y1="17.4" x2="18.9" y2="18.9"/>
+        <line x1="5.1" y1="18.9" x2="6.6" y2="17.4"/>
+        <line x1="17.4" y1="6.6" x2="18.9" y2="5.1"/>
+      </g>
+    </symbol>
+    <symbol id="icon-pin" viewBox="0 0 24 24">
+      <path d="M12 2.2c-3.9 0-7 3-7 6.8 0 5.1 7 12.8 7 12.8s7-7.7 7-12.8c0-3.8-3.1-6.8-7-6.8Z" fill="currentColor"/>
+      <circle cx="12" cy="9.2" r="2.4" fill="rgba(0,0,0,0)" stroke="rgba(0,0,0,0.25)" stroke-width="1.6"/>
+    </symbol>
+    <symbol id="icon-cap" viewBox="0 0 24 24">
+      <path d="M12 3 1.5 8.4 12 13.8l8.5-4.4V16h1.6V8.4L12 3Z" fill="currentColor"/>
+      <path d="M5.5 12.6v3.9C5.5 18.4 8.4 20 12 20s6.5-1.6 6.5-3.5v-3.9L12 16.1l-6.5-3.5Z" fill="currentColor"/>
+    </symbol>
+    <symbol id="icon-bag" viewBox="0 0 24 24">
+      <path d="M6.4 7.6 7.5 20.6h9l1.1-13H6.4Z" fill="currentColor"/>
+      <path d="M9 8.4V5.8a3 3 0 0 1 6 0v2.6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="icon-maps" viewBox="0 0 24 24">
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" fill="white"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="container">
+  <header class="header">
+    <h1>BAY AREA</h1>
+    <h2>FLEA MARKET GUIDE</h2>
+    <h3>May 2026 – Through May 18</h3>
+  </header>
+
+  <div class="legend">
+    <div class="legend-title">Key</div>
+    <div class="legend-row">
+      <div class="swatch t-blue"></div>
+      <div>Once a month — French Market Marin, Inner Sunset Flea, Chabot College Flea Market</div>
+    </div>
+    <div class="legend-row">
+      <div class="swatch t-gold"></div>
+      <div>Once a week (Sundays) — Alemany, Berkeley Flea, Laney College, Napa-Vallejo</div>
+    </div>
+    <div class="legend-row">
+      <div class="swatch t-red"></div>
+      <div>Multiple days/week — Berryessa</div>
+    </div>
+  </div>
+
+  <div class="schedule">
+
+    <div class="day">
+      <div class="day-label t-red">MAY 8</div>
+      <div class="events">
+        <div class="event t-red" data-name="Berryessa Flea Market" data-when="Friday, May 8 · 7AM–5PM" data-end="2026-05-08T17:00" style="--ml: 14.286%; --w: 71.429%;">
+          <div class="event-icon"><svg><use href="#icon-storefront"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Berryessa Flea Market</div>
+            <div class="event-hours">7AM–5PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day">
+      <div class="day-label t-gold-red">MAY 9</div>
+      <div class="events">
+        <div class="event t-gold" data-name="Berkeley Flea Market" data-when="Saturday, May 9 · 7AM–7PM" data-end="2026-05-09T19:00" style="--ml: 14.286%; --w: 85.714%;">
+          <div class="event-icon"><svg><use href="#icon-california"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Berkeley Flea Market</div>
+            <div class="event-hours">7AM–7PM</div>
+          </div>
+        </div>
+        <div class="event t-red" data-name="Berryessa Flea Market" data-when="Saturday, May 9 · 7AM–5PM" data-end="2026-05-09T17:00" style="--ml: 14.286%; --w: 71.429%;">
+          <div class="event-icon"><svg><use href="#icon-storefront"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Berryessa Flea Market</div>
+            <div class="event-hours">7AM–5PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day">
+      <div class="day-label t-blue-gold-red">MAY 10</div>
+      <div class="events">
+        <div class="event t-blue" data-name="The French Market Marin" data-when="Sunday, May 10 · 9AM–3PM" data-end="2026-05-10T15:00" style="--ml: 28.571%; --w: 42.857%;">
+          <div class="event-icon"><svg><use href="#icon-utensils"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">The French Market Marin</div>
+            <div class="event-hours">9AM–3PM</div>
+          </div>
+        </div>
+        <div class="event t-blue" data-name="Inner Sunset Flea" data-when="Sunday, May 10 · 10AM–4PM" data-end="2026-05-10T16:00" style="--ml: 35.714%; --w: 42.857%;">
+          <div class="event-icon"><svg><use href="#icon-sun"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Inner Sunset Flea</div>
+            <div class="event-hours">10AM–4PM</div>
+          </div>
+        </div>
+        <div class="event t-gold" data-name="Alemany Flea Market" data-when="Sunday, May 10 · 7AM–3PM" data-end="2026-05-10T15:00" style="--ml: 14.286%; --w: 57.143%;">
+          <div class="event-icon"><svg><use href="#icon-pin"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Alemany Flea Market</div>
+            <div class="event-hours">7AM–3PM</div>
+          </div>
+        </div>
+        <div class="event t-gold" data-name="Berkeley Flea Market" data-when="Sunday, May 10 · 7AM–7PM" data-end="2026-05-10T19:00" style="--ml: 14.286%; --w: 85.714%;">
+          <div class="event-icon"><svg><use href="#icon-california"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Berkeley Flea Market</div>
+            <div class="event-hours">7AM–7PM</div>
+          </div>
+        </div>
+        <div class="event t-gold" data-name="Laney College Flea Market" data-when="Sunday, May 10 · 7AM–3PM" data-end="2026-05-10T15:00" style="--ml: 14.286%; --w: 57.143%;">
+          <div class="event-icon"><svg><use href="#icon-cap"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Laney College Flea Market</div>
+            <div class="event-hours">7AM–3PM</div>
+          </div>
+        </div>
+        <div class="event t-gold" data-name="Napa-Vallejo Flea Market" data-when="Sunday, May 10 · 5AM–5PM" data-end="2026-05-10T17:00" style="--ml: 0%; --w: 85.714%;">
+          <div class="event-icon"><svg><use href="#icon-bag"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Napa-Vallejo Flea Market</div>
+            <div class="event-hours">5AM–5PM</div>
+          </div>
+        </div>
+        <div class="event t-red" data-name="Berryessa Flea Market" data-when="Sunday, May 10 · 7AM–5PM" data-end="2026-05-10T17:00" style="--ml: 14.286%; --w: 71.429%;">
+          <div class="event-icon"><svg><use href="#icon-storefront"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Berryessa Flea Market</div>
+            <div class="event-hours">7AM–5PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day">
+      <div class="day-label t-red">MAY 15</div>
+      <div class="events">
+        <div class="event t-red" data-name="Berryessa Flea Market" data-when="Friday, May 15 · 7AM–5PM" data-end="2026-05-15T17:00" style="--ml: 14.286%; --w: 71.429%;">
+          <div class="event-icon"><svg><use href="#icon-storefront"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Berryessa Flea Market</div>
+            <div class="event-hours">7AM–5PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day">
+      <div class="day-label t-blue-gold-red">MAY 16</div>
+      <div class="events">
+        <div class="event t-blue" data-name="Chabot College Flea Market" data-when="Saturday, May 16 · 8AM–4PM" data-end="2026-05-16T16:00" style="--ml: 21.429%; --w: 57.143%;">
+          <div class="event-icon"><svg><use href="#icon-bag"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Chabot College Flea Market</div>
+            <div class="event-hours">8AM–4PM</div>
+          </div>
+        </div>
+        <div class="event t-gold" data-name="Berkeley Flea Market" data-when="Saturday, May 16 · 7AM–7PM" data-end="2026-05-16T19:00" style="--ml: 14.286%; --w: 85.714%;">
+          <div class="event-icon"><svg><use href="#icon-california"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Berkeley Flea Market</div>
+            <div class="event-hours">7AM–7PM</div>
+          </div>
+        </div>
+        <div class="event t-red" data-name="Berryessa Flea Market" data-when="Saturday, May 16 · 7AM–5PM" data-end="2026-05-16T17:00" style="--ml: 14.286%; --w: 71.429%;">
+          <div class="event-icon"><svg><use href="#icon-storefront"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Berryessa Flea Market</div>
+            <div class="event-hours">7AM–5PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="day">
+      <div class="day-label t-gold-red">MAY 17</div>
+      <div class="events">
+        <div class="event t-gold" data-name="Alemany Flea Market" data-when="Sunday, May 17 · 7AM–3PM" data-end="2026-05-17T15:00" style="--ml: 14.286%; --w: 57.143%;">
+          <div class="event-icon"><svg><use href="#icon-pin"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Alemany Flea Market</div>
+            <div class="event-hours">7AM–3PM</div>
+          </div>
+        </div>
+        <div class="event t-gold" data-name="Berkeley Flea Market" data-when="Sunday, May 17 · 7AM–7PM" data-end="2026-05-17T19:00" style="--ml: 14.286%; --w: 85.714%;">
+          <div class="event-icon"><svg><use href="#icon-california"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Berkeley Flea Market</div>
+            <div class="event-hours">7AM–7PM</div>
+          </div>
+        </div>
+        <div class="event t-gold" data-name="Laney College Flea Market" data-when="Sunday, May 17 · 7AM–3PM" data-end="2026-05-17T15:00" style="--ml: 14.286%; --w: 57.143%;">
+          <div class="event-icon"><svg><use href="#icon-cap"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Laney College Flea Market</div>
+            <div class="event-hours">7AM–3PM</div>
+          </div>
+        </div>
+        <div class="event t-gold" data-name="Napa-Vallejo Flea Market" data-when="Sunday, May 17 · 5AM–5PM" data-end="2026-05-17T17:00" style="--ml: 0%; --w: 85.714%;">
+          <div class="event-icon"><svg><use href="#icon-bag"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Napa-Vallejo Flea Market</div>
+            <div class="event-hours">5AM–5PM</div>
+          </div>
+        </div>
+        <div class="event t-red" data-name="Berryessa Flea Market" data-when="Sunday, May 17 · 7AM–5PM" data-end="2026-05-17T17:00" style="--ml: 14.286%; --w: 71.429%;">
+          <div class="event-icon"><svg><use href="#icon-storefront"/></svg></div>
+          <div class="event-text">
+            <div class="event-name">Berryessa Flea Market</div>
+            <div class="event-hours">7AM–5PM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- modal -->
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card">
+    <button class="modal-close" data-close aria-label="Close">×</button>
+    <span id="modal-tag" class="modal-tag t-red">Multiple days/week</span>
+    <h3 id="modal-name" class="modal-name"></h3>
+    <div id="modal-when" class="modal-row"></div>
+    <div id="modal-area" class="modal-row"></div>
+    <div id="modal-status" class="modal-status"></div>
+    <a id="modal-maps" class="modal-maps" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-maps"/></svg>
+      <span>Open in Google Maps</span>
+    </a>
+    <div class="modal-note">Tap the button to launch the Maps app on your phone.</div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // venues with city hints (used to disambiguate the Google Maps search)
+  // we don't show or hard-code street addresses — google maps resolves those
+  const venues = {
+    'Berryessa Flea Market':       { area: 'San Jose, CA',       tier: 'Multiple days/week' },
+    'Berkeley Flea Market':        { area: 'Berkeley, CA',       tier: 'Once a week (Sundays)' },
+    'The French Market Marin':     { area: 'Marin County, CA',   tier: 'Once a month' },
+    'Inner Sunset Flea':           { area: 'San Francisco, CA',  tier: 'Once a month' },
+    'Alemany Flea Market':         { area: 'San Francisco, CA',  tier: 'Once a week (Sundays)' },
+    'Laney College Flea Market':   { area: 'Oakland, CA',        tier: 'Once a week (Sundays)' },
+    'Napa-Vallejo Flea Market':    { area: 'Vallejo, CA',        tier: 'Once a week (Sundays)' },
+    'Chabot College Flea Market':  { area: 'Hayward, CA',        tier: 'Once a month' },
+  };
+
+  const tierClass = {
+    'Multiple days/week': 't-red',
+    'Once a week (Sundays)': 't-gold',
+    'Once a month': 't-blue',
+  };
+
+  const modal = document.getElementById('modal');
+  const mName = document.getElementById('modal-name');
+  const mWhen = document.getElementById('modal-when');
+  const mArea = document.getElementById('modal-area');
+  const mStatus = document.getElementById('modal-status');
+  const mMaps = document.getElementById('modal-maps');
+  const mTag = document.getElementById('modal-tag');
+
+  function markPast() {
+    const now = new Date();
+    document.querySelectorAll('.event').forEach(el => {
+      const end = new Date(el.dataset.end);
+      el.classList.toggle('past', now > end);
+    });
+    document.querySelectorAll('.day').forEach(day => {
+      const evs = day.querySelectorAll('.event');
+      const allPast = evs.length > 0 && [...evs].every(e => e.classList.contains('past'));
+      day.classList.toggle('past', allPast);
+    });
+  }
+
+  function openModal(el) {
+    const name = el.dataset.name;
+    const when = el.dataset.when;
+    const v = venues[name] || {};
+    const past = el.classList.contains('past');
+
+    mName.textContent = name;
+    mWhen.innerHTML = '<strong>When:</strong> ' + when;
+    mArea.innerHTML = '<strong>Area:</strong> ' + (v.area || 'See Google Maps');
+    mTag.textContent = v.tier || '';
+    mTag.className = 'modal-tag ' + (tierClass[v.tier] || 't-red');
+
+    if (past) {
+      mStatus.textContent = 'This market has already passed.';
+      mStatus.classList.add('past');
+    } else {
+      mStatus.textContent = 'Upcoming — tap below for directions.';
+      mStatus.classList.remove('past');
+    }
+
+    // universal google maps search url — opens the Maps app on iOS/Android, web on desktop
+    const query = encodeURIComponent(`${name}, ${v.area || 'California'}`);
+    mMaps.href = `https://www.google.com/maps/search/?api=1&query=${query}`;
+
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeModal() {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  document.addEventListener('click', (e) => {
+    const ev = e.target.closest('.event');
+    if (ev) { openModal(ev); return; }
+    if (e.target.matches('[data-close]')) closeModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  markPast();
+  // re-check past status every 60s while page is open
+  setInterval(markPast, 60_000);
+})();
+</script>
+</body>
+</html>
