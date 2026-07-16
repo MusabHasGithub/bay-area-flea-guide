@@ -199,6 +199,43 @@
     white-space: nowrap;
   }
 
+  /* tiny weather badge on weather-sensitive bars; parts animate on bar hover */
+  .wx {
+    flex: 0 0 20px;
+    width: 20px;
+    height: 20px;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+  }
+  .wx svg { width: 100%; height: 100%; overflow: visible; display: block; }
+  .wx .st { fill: none; stroke: rgba(255,255,255,0.95); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .wx .fl { fill: rgba(255,255,255,0.95); }
+
+  .wx-rays { transform-origin: 12px 12px; }
+  .event:hover .wx-rays { animation: wxspin 6s linear infinite; }
+  @keyframes wxspin { to { transform: rotate(360deg); } }
+
+  .event:hover .wx-cloud { animation: wxbob 1.8s ease-in-out infinite; }
+  @keyframes wxbob { 50% { transform: translateX(1.6px); } }
+
+  .wx-drop { opacity: 0.9; }
+  .event:hover .wx-drop { animation: wxdrop 0.9s ease-in infinite; }
+  .event:hover .wx-drop:nth-of-type(2) { animation-delay: 0.3s; }
+  .event:hover .wx-drop:nth-of-type(3) { animation-delay: 0.6s; }
+  @keyframes wxdrop {
+    0% { transform: translateY(0); opacity: 0.9; }
+    100% { transform: translateY(5px); opacity: 0; }
+  }
+
+  .event:hover .wx-bolt { animation: wxflash 1.1s ease-in-out infinite; }
+  @keyframes wxflash { 0%, 100% { opacity: 1; } 55% { opacity: 0.15; } }
+
+  .event:hover .wx-fog-line { animation: wxfog 2.4s ease-in-out infinite; }
+  .event:hover .wx-fog-line:nth-of-type(2) { animation-delay: 0.4s; animation-direction: reverse; }
+  .event:hover .wx-fog-line:nth-of-type(3) { animation-delay: 0.8s; }
+  @keyframes wxfog { 50% { transform: translateX(2px); } }
+
   /* past events: gray + strikethrough */
   .event.past {
     background: var(--past);
@@ -559,8 +596,9 @@
 
   <div class="footnote">
     Schedule is generated automatically for the current month from each market's
-    recurring pattern. Markets occasionally close for holidays or weather, so check
-    before making a long trip.
+    recurring pattern. Weather icons show the Open-Meteo forecast at each location
+    for the next two weeks, on markets that may scale back in bad weather. Markets
+    occasionally close for holidays or weather, so check before making a long trip.
   </div>
 </div>
 
@@ -575,6 +613,7 @@
     <div class="qf-row"><strong>What's there</strong> <span id="qf-goods"></span></div>
     <div class="qf-row"><strong>What to expect</strong> <span id="qf-expect"></span></div>
     <div class="qf-row"><strong>Cool fact</strong> <span id="qf-fun"></span></div>
+    <div class="qf-row" id="qf-wx-row"><strong>Forecast</strong> <span id="qf-wx"></span></div>
   </div>
 </div>
 
@@ -590,6 +629,7 @@
     <div id="modal-goods" class="modal-row"></div>
     <div id="modal-expect" class="modal-row"></div>
     <div id="modal-fun" class="modal-row"></div>
+    <div id="modal-wx" class="modal-row"></div>
     <div id="modal-status" class="modal-status"></div>
     <a id="modal-maps" class="modal-maps" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-maps"/></svg>
@@ -632,6 +672,7 @@
       site: 'https://berkeleyfleamarket.com/',
       tier: 'gold', tierLabel: 'Every Sat & Sun',
       icon: 'california',
+      weather: { lat: 37.853, lon: -122.270 },
       start: 9, end: 17,
       rule: { weekly: [6, 0] },
       facts: {
@@ -660,6 +701,7 @@
       site: 'https://www.yelp.com/biz/laney-college-flea-market-oakland',
       tier: 'gold', tierLabel: 'Every Sunday',
       icon: 'cap',
+      weather: { lat: 37.797, lon: -122.265 },
       start: 7, end: 15,
       rule: { weekly: [0] },
       facts: {
@@ -688,6 +730,7 @@
       site: 'https://www.thefrenchmarketmarin.com/',
       tier: 'blue', tierLabel: '2nd Sunday of the month',
       icon: 'utensils',
+      weather: { lat: 37.9735, lon: -122.5311 },
       start: 9, end: 15,
       rule: { nth: 2, dow: 0 },
       facts: {
@@ -702,6 +745,7 @@
       site: 'https://isflea.com/',
       tier: 'blue', tierLabel: '2nd Sunday, Apr–Nov',
       icon: 'sun',
+      weather: { lat: 37.7641, lon: -122.4660 },
       start: 10, end: 16,
       rule: { nth: 2, dow: 0, months: [3, 4, 5, 6, 7, 8, 9, 10] },
       facts: {
@@ -817,6 +861,7 @@
         ev.dataset.name = m.name;
         ev.dataset.when = `${DAYS[date.getDay()]}, ${MONTHS[month]} ${d} · ${hours}`;
         ev.dataset.end = end.toISOString();
+        ev.dataset.date = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
         ev.style.setProperty('--ml', ml + '%');
         ev.style.setProperty('--w', w + '%');
         ev.innerHTML =
@@ -834,6 +879,7 @@
     }
 
     markPast();
+    decorateWeather();
   }
 
   function markPast() {
@@ -858,6 +904,72 @@
       pastDays.forEach(d => schedule.appendChild(d));
     }
     requestGrayUpdate();
+  }
+
+  // ---- daily weather forecasts (Open-Meteo, free, no key) --------------------
+  // fetched per market location for markets that aren't rain-or-shine; each
+  // upcoming bar within the ~16-day window gets a tiny animated badge
+  const WX_KIND = code => {
+    if (code === 0) return 'sun';
+    if (code <= 2) return 'partly';
+    if (code === 3) return 'cloud';
+    if (code === 45 || code === 48) return 'fog';
+    if (code >= 95) return 'storm';
+    return 'rain';  // drizzle, rain, snow, showers
+  };
+  const WX_LABEL = {
+    sun: 'Clear skies', partly: 'Partly cloudy', cloud: 'Overcast',
+    fog: 'Foggy', rain: 'Rain likely', storm: 'Thunderstorms possible',
+  };
+  const WX_SVG = {
+    sun: '<g class="wx-rays st"><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></g><circle class="fl" cx="12" cy="12" r="4.6"/>',
+    partly: '<g class="wx-rays st" style="transform-origin: 8px 8px"><line x1="8" y1="1.5" x2="8" y2="3.5"/><line x1="1.5" y1="8" x2="3.5" y2="8"/><line x1="3.4" y1="3.4" x2="4.8" y2="4.8"/><line x1="12.6" y1="3.4" x2="11.2" y2="4.8"/></g><circle class="fl" cx="8" cy="8" r="3.4"/><path class="wx-cloud fl" d="M8.5 20a3.6 3.6 0 0 1-.4-7.2 5 5 0 0 1 9.6 1.2 3 3 0 0 1-.5 6H8.5Z"/>',
+    cloud: '<path class="wx-cloud fl" d="M6.5 18.5a4.3 4.3 0 0 1-.5-8.6 6 6 0 0 1 11.6 1.5 3.6 3.6 0 0 1-.6 7.1H6.5Z"/>',
+    fog: '<path class="wx-cloud fl" d="M6.5 13a4 4 0 0 1-.4-8 5.6 5.6 0 0 1 10.8 1.4 3.3 3.3 0 0 1-.5 6.6H6.5Z"/><g class="st"><line class="wx-fog-line" x1="4" y1="16.5" x2="18" y2="16.5"/><line class="wx-fog-line" x1="6" y1="19.5" x2="20" y2="19.5"/><line class="wx-fog-line" x1="4.5" y1="22.5" x2="16" y2="22.5"/></g>',
+    rain: '<path class="wx-cloud fl" d="M6.5 14a4 4 0 0 1-.4-8 5.6 5.6 0 0 1 10.8 1.4 3.3 3.3 0 0 1-.5 6.6H6.5Z"/><g class="st"><line class="wx-drop" x1="8" y1="16.5" x2="7" y2="20"/><line class="wx-drop" x1="12" y1="16.5" x2="11" y2="20"/><line class="wx-drop" x1="16" y1="16.5" x2="15" y2="20"/></g>',
+    storm: '<path class="wx-cloud fl" d="M6.5 13a4 4 0 0 1-.4-8 5.6 5.6 0 0 1 10.8 1.4 3.3 3.3 0 0 1-.5 6.6H6.5Z"/><polygon class="wx-bolt fl" points="12.5,13.5 8.5,19 11.5,19 10,23.5 15,17.5 12,17.5"/>',
+  };
+
+  let wxData = null;  // { marketName: { 'YYYY-MM-DD': {code, pop, tmax} } }
+
+  async function loadWeather() {
+    const targets = MARKETS.filter(m => m.weather);
+    await Promise.all(targets.map(async m => {
+      try {
+        const url = 'https://api.open-meteo.com/v1/forecast'
+          + `?latitude=${m.weather.lat}&longitude=${m.weather.lon}`
+          + '&daily=weather_code,precipitation_probability_max,temperature_2m_max'
+          + '&temperature_unit=fahrenheit&timezone=America%2FLos_Angeles&forecast_days=16';
+        const j = await (await fetch(url)).json();
+        const byDate = {};
+        j.daily.time.forEach((d, i) => byDate[d] = {
+          code: j.daily.weather_code[i],
+          pop: j.daily.precipitation_probability_max[i],
+          tmax: j.daily.temperature_2m_max[i],
+        });
+        (wxData = wxData || {})[m.name] = byDate;
+      } catch (e) { /* offline or API down: bars just show no badge */ }
+    }));
+    decorateWeather();
+  }
+
+  function decorateWeather() {
+    if (!wxData) return;
+    document.querySelectorAll('.event').forEach(ev => {
+      const old = ev.querySelector('.wx');
+      if (old) old.remove();
+      delete ev.dataset.wxText;
+      if (ev.classList.contains('past')) return;
+      const day = (wxData[ev.dataset.name] || {})[ev.dataset.date];
+      if (!day) return;
+
+      const kind = WX_KIND(day.code);
+      const badge = document.createElement('span');
+      badge.className = 'wx';
+      badge.innerHTML = `<svg viewBox="0 0 24 24" aria-hidden="true">${WX_SVG[kind]}</svg>`;
+      ev.appendChild(badge);
+      ev.dataset.wxText = `${WX_LABEL[kind]} · ${day.pop}% chance of rain · high ${Math.round(day.tmax)}°F`;
+    });
   }
 
   // ---- scroll-driven gray theme for the past section -------------------------
@@ -913,6 +1025,8 @@
     qfGoods.textContent = m.facts.goods;
     qfExpect.textContent = m.facts.expect;
     qfFun.textContent = m.facts.fun;
+    document.getElementById('qf-wx-row').style.display = el.dataset.wxText ? '' : 'none';
+    document.getElementById('qf-wx').textContent = el.dataset.wxText || '';
 
     const r = el.getBoundingClientRect();
     const cardW = 280, pad = 12;
@@ -995,6 +1109,7 @@
     fillFact('modal-goods', "What's there", m.facts && m.facts.goods);
     fillFact('modal-expect', 'Expect', m.facts && m.facts.expect);
     fillFact('modal-fun', 'Cool fact', m.facts && m.facts.fun);
+    fillFact('modal-wx', 'Forecast', el.dataset.wxText);
     mWhen.innerHTML = '<strong>When:</strong> ';
     mWhen.appendChild(document.createTextNode(el.dataset.when));
     mArea.innerHTML = '<strong>Area:</strong> ' + (m.area || 'See Google Maps');
@@ -1035,6 +1150,7 @@
 
   // ---- boot + keep fresh ---------------------------------------------------
   buildMonth(new Date());
+  loadWeather();
 
   // every minute: update past-markers; if the month rolled over (page left
   // open, or resumed from sleep), rebuild the whole schedule
