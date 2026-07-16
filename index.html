@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bay Area Flea Market Guide — May 2026</title>
+<title>Bay Area Flea Market Guide</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@500;600;700;800&display=swap" rel="stylesheet">
@@ -132,23 +132,6 @@
     text-transform: uppercase;
   }
 
-  .day-label.t-red { background: var(--orange); }
-  .day-label.t-gold { background: var(--gold); }
-  .day-label.t-blue { background: var(--blue); }
-
-  .day-label.t-gold-red {
-    background: linear-gradient(to top,
-      var(--gold) 0%, var(--gold) 50%,
-      var(--orange) 50%, var(--orange) 100%);
-  }
-
-  .day-label.t-blue-gold-red {
-    background: linear-gradient(to top,
-      var(--blue) 0%, var(--blue) 33.333%,
-      var(--gold) 33.333%, var(--gold) 66.666%,
-      var(--orange) 66.666%, var(--orange) 100%);
-  }
-
   .events {
     flex: 1;
     display: flex;
@@ -230,6 +213,11 @@
   .day.past .day-label {
     background: var(--past) !important;
     opacity: 0.65;
+  }
+
+  /* "today" marker */
+  .day.today .day-label {
+    box-shadow: 0 0 0 3px var(--darkbrown);
   }
 
   /* modal */
@@ -341,6 +329,15 @@
   }
   .modal-close:hover { color: var(--darkbrown); background: rgba(0,0,0,0.05); }
 
+  .footnote {
+    margin-top: 32px;
+    font-size: 12px;
+    color: var(--midbrown);
+    opacity: 0.75;
+    text-align: center;
+    line-height: 1.5;
+  }
+
   @media (max-width: 540px) {
     body { padding: 32px 14px 48px; }
     .header h1 { font-size: 52px; }
@@ -409,196 +406,31 @@
   <header class="header">
     <h1>BAY AREA</h1>
     <h2>FLEA MARKET GUIDE</h2>
-    <h3>May 2026 – Through May 18</h3>
+    <h3 id="subtitle"></h3>
   </header>
 
   <div class="legend">
     <div class="legend-title">Key</div>
     <div class="legend-row">
       <div class="swatch t-blue"></div>
-      <div>Once a month — French Market Marin, Inner Sunset Flea, Chabot College Flea Market</div>
+      <div>Once a month — French Market Marin (2nd Sun), Inner Sunset Flea (2nd Sun, Apr–Nov), Chabot College (3rd Sat)</div>
     </div>
     <div class="legend-row">
       <div class="swatch t-gold"></div>
-      <div>Once a week (Sundays) — Alemany, Berkeley Flea, Laney College, Napa-Vallejo</div>
+      <div>Weekly — Alemany, Laney College, Napa-Vallejo (Sundays); Berkeley Flea (Sat &amp; Sun)</div>
     </div>
     <div class="legend-row">
       <div class="swatch t-red"></div>
-      <div>Multiple days/week — Berryessa</div>
+      <div>Multiple days/week — Berryessa (Fri, Sat, Sun)</div>
     </div>
   </div>
 
-  <div class="schedule">
+  <div class="schedule" id="schedule"></div>
 
-    <div class="day">
-      <div class="day-label t-red">MAY 8</div>
-      <div class="events">
-        <div class="event t-red" data-name="Berryessa Flea Market" data-when="Friday, May 8 · 7AM–5PM" data-end="2026-05-08T17:00" style="--ml: 14.286%; --w: 71.429%;">
-          <div class="event-icon"><svg><use href="#icon-storefront"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Berryessa Flea Market</div>
-            <div class="event-hours">7AM–5PM</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="day">
-      <div class="day-label t-gold-red">MAY 9</div>
-      <div class="events">
-        <div class="event t-gold" data-name="Berkeley Flea Market" data-when="Saturday, May 9 · 7AM–7PM" data-end="2026-05-09T19:00" style="--ml: 14.286%; --w: 85.714%;">
-          <div class="event-icon"><svg><use href="#icon-california"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Berkeley Flea Market</div>
-            <div class="event-hours">7AM–7PM</div>
-          </div>
-        </div>
-        <div class="event t-red" data-name="Berryessa Flea Market" data-when="Saturday, May 9 · 7AM–5PM" data-end="2026-05-09T17:00" style="--ml: 14.286%; --w: 71.429%;">
-          <div class="event-icon"><svg><use href="#icon-storefront"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Berryessa Flea Market</div>
-            <div class="event-hours">7AM–5PM</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="day">
-      <div class="day-label t-blue-gold-red">MAY 10</div>
-      <div class="events">
-        <div class="event t-blue" data-name="The French Market Marin" data-when="Sunday, May 10 · 9AM–3PM" data-end="2026-05-10T15:00" style="--ml: 28.571%; --w: 42.857%;">
-          <div class="event-icon"><svg><use href="#icon-utensils"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">The French Market Marin</div>
-            <div class="event-hours">9AM–3PM</div>
-          </div>
-        </div>
-        <div class="event t-blue" data-name="Inner Sunset Flea" data-when="Sunday, May 10 · 10AM–4PM" data-end="2026-05-10T16:00" style="--ml: 35.714%; --w: 42.857%;">
-          <div class="event-icon"><svg><use href="#icon-sun"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Inner Sunset Flea</div>
-            <div class="event-hours">10AM–4PM</div>
-          </div>
-        </div>
-        <div class="event t-gold" data-name="Alemany Flea Market" data-when="Sunday, May 10 · 7AM–3PM" data-end="2026-05-10T15:00" style="--ml: 14.286%; --w: 57.143%;">
-          <div class="event-icon"><svg><use href="#icon-pin"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Alemany Flea Market</div>
-            <div class="event-hours">7AM–3PM</div>
-          </div>
-        </div>
-        <div class="event t-gold" data-name="Berkeley Flea Market" data-when="Sunday, May 10 · 7AM–7PM" data-end="2026-05-10T19:00" style="--ml: 14.286%; --w: 85.714%;">
-          <div class="event-icon"><svg><use href="#icon-california"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Berkeley Flea Market</div>
-            <div class="event-hours">7AM–7PM</div>
-          </div>
-        </div>
-        <div class="event t-gold" data-name="Laney College Flea Market" data-when="Sunday, May 10 · 7AM–3PM" data-end="2026-05-10T15:00" style="--ml: 14.286%; --w: 57.143%;">
-          <div class="event-icon"><svg><use href="#icon-cap"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Laney College Flea Market</div>
-            <div class="event-hours">7AM–3PM</div>
-          </div>
-        </div>
-        <div class="event t-gold" data-name="Napa-Vallejo Flea Market" data-when="Sunday, May 10 · 5AM–5PM" data-end="2026-05-10T17:00" style="--ml: 0%; --w: 85.714%;">
-          <div class="event-icon"><svg><use href="#icon-bag"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Napa-Vallejo Flea Market</div>
-            <div class="event-hours">5AM–5PM</div>
-          </div>
-        </div>
-        <div class="event t-red" data-name="Berryessa Flea Market" data-when="Sunday, May 10 · 7AM–5PM" data-end="2026-05-10T17:00" style="--ml: 14.286%; --w: 71.429%;">
-          <div class="event-icon"><svg><use href="#icon-storefront"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Berryessa Flea Market</div>
-            <div class="event-hours">7AM–5PM</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="day">
-      <div class="day-label t-red">MAY 15</div>
-      <div class="events">
-        <div class="event t-red" data-name="Berryessa Flea Market" data-when="Friday, May 15 · 7AM–5PM" data-end="2026-05-15T17:00" style="--ml: 14.286%; --w: 71.429%;">
-          <div class="event-icon"><svg><use href="#icon-storefront"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Berryessa Flea Market</div>
-            <div class="event-hours">7AM–5PM</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="day">
-      <div class="day-label t-blue-gold-red">MAY 16</div>
-      <div class="events">
-        <div class="event t-blue" data-name="Chabot College Flea Market" data-when="Saturday, May 16 · 8AM–4PM" data-end="2026-05-16T16:00" style="--ml: 21.429%; --w: 57.143%;">
-          <div class="event-icon"><svg><use href="#icon-bag"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Chabot College Flea Market</div>
-            <div class="event-hours">8AM–4PM</div>
-          </div>
-        </div>
-        <div class="event t-gold" data-name="Berkeley Flea Market" data-when="Saturday, May 16 · 7AM–7PM" data-end="2026-05-16T19:00" style="--ml: 14.286%; --w: 85.714%;">
-          <div class="event-icon"><svg><use href="#icon-california"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Berkeley Flea Market</div>
-            <div class="event-hours">7AM–7PM</div>
-          </div>
-        </div>
-        <div class="event t-red" data-name="Berryessa Flea Market" data-when="Saturday, May 16 · 7AM–5PM" data-end="2026-05-16T17:00" style="--ml: 14.286%; --w: 71.429%;">
-          <div class="event-icon"><svg><use href="#icon-storefront"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Berryessa Flea Market</div>
-            <div class="event-hours">7AM–5PM</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="day">
-      <div class="day-label t-gold-red">MAY 17</div>
-      <div class="events">
-        <div class="event t-gold" data-name="Alemany Flea Market" data-when="Sunday, May 17 · 7AM–3PM" data-end="2026-05-17T15:00" style="--ml: 14.286%; --w: 57.143%;">
-          <div class="event-icon"><svg><use href="#icon-pin"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Alemany Flea Market</div>
-            <div class="event-hours">7AM–3PM</div>
-          </div>
-        </div>
-        <div class="event t-gold" data-name="Berkeley Flea Market" data-when="Sunday, May 17 · 7AM–7PM" data-end="2026-05-17T19:00" style="--ml: 14.286%; --w: 85.714%;">
-          <div class="event-icon"><svg><use href="#icon-california"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Berkeley Flea Market</div>
-            <div class="event-hours">7AM–7PM</div>
-          </div>
-        </div>
-        <div class="event t-gold" data-name="Laney College Flea Market" data-when="Sunday, May 17 · 7AM–3PM" data-end="2026-05-17T15:00" style="--ml: 14.286%; --w: 57.143%;">
-          <div class="event-icon"><svg><use href="#icon-cap"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Laney College Flea Market</div>
-            <div class="event-hours">7AM–3PM</div>
-          </div>
-        </div>
-        <div class="event t-gold" data-name="Napa-Vallejo Flea Market" data-when="Sunday, May 17 · 5AM–5PM" data-end="2026-05-17T17:00" style="--ml: 0%; --w: 85.714%;">
-          <div class="event-icon"><svg><use href="#icon-bag"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Napa-Vallejo Flea Market</div>
-            <div class="event-hours">5AM–5PM</div>
-          </div>
-        </div>
-        <div class="event t-red" data-name="Berryessa Flea Market" data-when="Sunday, May 17 · 7AM–5PM" data-end="2026-05-17T17:00" style="--ml: 14.286%; --w: 71.429%;">
-          <div class="event-icon"><svg><use href="#icon-storefront"/></svg></div>
-          <div class="event-text">
-            <div class="event-name">Berryessa Flea Market</div>
-            <div class="event-hours">7AM–5PM</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+  <div class="footnote">
+    Schedule is generated automatically for the current month from each market's
+    recurring pattern. Markets occasionally close for holidays or weather — check
+    before making a long trip.
   </div>
 </div>
 
@@ -622,38 +454,187 @@
 
 <script>
 (() => {
-  // venues with city hints (used to disambiguate the Google Maps search)
-  // we don't show or hard-code street addresses — google maps resolves those
-  const venues = {
-    'Berryessa Flea Market':       { area: 'San Jose, CA',       tier: 'Multiple days/week' },
-    'Berkeley Flea Market':        { area: 'Berkeley, CA',       tier: 'Once a week (Sundays)' },
-    'The French Market Marin':     { area: 'Marin County, CA',   tier: 'Once a month' },
-    'Inner Sunset Flea':           { area: 'San Francisco, CA',  tier: 'Once a month' },
-    'Alemany Flea Market':         { area: 'San Francisco, CA',  tier: 'Once a week (Sundays)' },
-    'Laney College Flea Market':   { area: 'Oakland, CA',        tier: 'Once a week (Sundays)' },
-    'Napa-Vallejo Flea Market':    { area: 'Vallejo, CA',        tier: 'Once a week (Sundays)' },
-    'Chabot College Flea Market':  { area: 'Hayward, CA',        tier: 'Once a month' },
-  };
+  // ---- market data: recurrence rules --------------------------------------
+  // rule types:
+  //   { weekly: [dow, ...] }                 — every week on those days (0=Sun..6=Sat)
+  //   { nth: N, dow: D, months: [m, ...] }   — Nth <weekday> of the month (months
+  //                                            optional, 0=Jan..11=Dec; omit = all year)
+  // hours are 24h decimals on a 5AM–7PM timeline used for the gantt bars
+  const MARKETS = [
+    {
+      name: 'Berryessa Flea Market',
+      area: 'San Jose, CA',
+      tier: 'red', tierLabel: 'Multiple days/week',
+      icon: 'storefront',
+      start: 7, end: 17,
+      rule: { weekly: [5, 6, 0] },
+    },
+    {
+      name: 'Berkeley Flea Market',
+      area: 'Berkeley, CA',
+      tier: 'gold', tierLabel: 'Every Sat & Sun',
+      icon: 'california',
+      start: 7, end: 19,
+      rule: { weekly: [6, 0] },
+    },
+    {
+      name: 'Alemany Flea Market',
+      area: 'San Francisco, CA',
+      tier: 'gold', tierLabel: 'Every Sunday',
+      icon: 'pin',
+      start: 7, end: 15,
+      rule: { weekly: [0] },
+    },
+    {
+      name: 'Laney College Flea Market',
+      area: 'Oakland, CA',
+      tier: 'gold', tierLabel: 'Every Sunday',
+      icon: 'cap',
+      start: 7, end: 15,
+      rule: { weekly: [0] },
+    },
+    {
+      name: 'Napa-Vallejo Flea Market',
+      area: 'Vallejo, CA',
+      tier: 'gold', tierLabel: 'Every Sunday',
+      icon: 'bag',
+      start: 5, end: 17,
+      rule: { weekly: [0] },
+    },
+    {
+      name: 'The French Market Marin',
+      area: 'San Rafael, CA',
+      tier: 'blue', tierLabel: '2nd Sunday of the month',
+      icon: 'utensils',
+      start: 9, end: 15,
+      rule: { nth: 2, dow: 0 },
+    },
+    {
+      name: 'Inner Sunset Flea',
+      area: 'San Francisco, CA',
+      tier: 'blue', tierLabel: '2nd Sunday, Apr–Nov',
+      icon: 'sun',
+      start: 10, end: 16,
+      rule: { nth: 2, dow: 0, months: [3, 4, 5, 6, 7, 8, 9, 10] },
+    },
+    {
+      name: 'Chabot College Flea Market',
+      area: 'Hayward, CA',
+      tier: 'blue', tierLabel: '3rd Saturday of the month',
+      icon: 'bag',
+      start: 8, end: 15,
+      rule: { nth: 3, dow: 6 },
+    },
+  ];
 
-  const tierClass = {
-    'Multiple days/week': 't-red',
-    'Once a week (Sundays)': 't-gold',
-    'Once a month': 't-blue',
-  };
+  const TIER_COLOR = { red: '#C44B24', gold: '#D4A030', blue: '#2E86AB' };
+  const TIER_ORDER = { blue: 0, gold: 1, red: 2 };  // display order within a day
 
-  const modal = document.getElementById('modal');
-  const mName = document.getElementById('modal-name');
-  const mWhen = document.getElementById('modal-when');
-  const mArea = document.getElementById('modal-area');
-  const mStatus = document.getElementById('modal-status');
-  const mMaps = document.getElementById('modal-maps');
-  const mTag = document.getElementById('modal-tag');
+  // timeline for gantt bars: 5AM → 7PM (14 hours)
+  const TL_START = 5, TL_HOURS = 14;
+
+  // ---- recurrence engine ---------------------------------------------------
+  function occursOn(market, date) {
+    const r = market.rule, dow = date.getDay();
+    if (r.weekly) return r.weekly.includes(dow);
+    if (r.nth) {
+      if (dow !== r.dow) return false;
+      if (r.months && !r.months.includes(date.getMonth())) return false;
+      return Math.ceil(date.getDate() / 7) === r.nth;
+    }
+    return false;
+  }
+
+  function fmtHour(h) {
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    let hr = Math.floor(h) % 12; if (hr === 0) hr = 12;
+    const min = Math.round((h % 1) * 60);
+    return hr + (min ? ':' + String(min).padStart(2, '0') : '') + ampm;
+  }
+
+  function dayLabelBackground(tiers) {
+    // stacked bottom-to-top: blue, gold, red (label is rotated 180°)
+    const colors = ['blue', 'gold', 'red'].filter(t => tiers.has(t)).map(t => TIER_COLOR[t]);
+    if (colors.length === 1) return colors[0];
+    const step = 100 / colors.length;
+    const stops = colors.map((c, i) =>
+      `${c} ${(i * step).toFixed(3)}%, ${c} ${((i + 1) * step).toFixed(3)}%`).join(', ');
+    return `linear-gradient(to top, ${stops})`;
+  }
+
+  // ---- render --------------------------------------------------------------
+  const MONTHS = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+  const DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  let renderedMonthKey = null;
+
+  function buildMonth(now) {
+    const year = now.getFullYear(), month = now.getMonth();
+    renderedMonthKey = `${year}-${month}`;
+
+    document.title = `Bay Area Flea Market Guide — ${MONTHS[month]} ${year}`;
+    document.getElementById('subtitle').textContent = `${MONTHS[month]} ${year}`;
+
+    const schedule = document.getElementById('schedule');
+    schedule.innerHTML = '';
+
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const todayStr = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = new Date(year, month, d);
+      const todays = MARKETS.filter(m => occursOn(m, date))
+        .sort((a, b) => TIER_ORDER[a.tier] - TIER_ORDER[b.tier] || a.start - b.start);
+      if (!todays.length) continue;
+
+      const dayEl = document.createElement('div');
+      dayEl.className = 'day';
+      if (`${year}-${month}-${d}` === todayStr) dayEl.classList.add('today');
+
+      const label = document.createElement('div');
+      label.className = 'day-label';
+      label.textContent = `${MONTHS[month].slice(0, 3)} ${d}`;
+      label.style.background = dayLabelBackground(new Set(todays.map(m => m.tier)));
+      dayEl.appendChild(label);
+
+      const events = document.createElement('div');
+      events.className = 'events';
+
+      for (const m of todays) {
+        const hours = `${fmtHour(m.start)}–${fmtHour(m.end)}`;
+        const ml = ((m.start - TL_START) / TL_HOURS * 100).toFixed(3);
+        const w = ((m.end - m.start) / TL_HOURS * 100).toFixed(3);
+        const end = new Date(year, month, d, Math.floor(m.end), Math.round((m.end % 1) * 60));
+
+        const ev = document.createElement('div');
+        ev.className = `event t-${m.tier}`;
+        ev.dataset.name = m.name;
+        ev.dataset.when = `${DAYS[date.getDay()]}, ${MONTHS[month]} ${d} · ${hours}`;
+        ev.dataset.end = end.toISOString();
+        ev.style.setProperty('--ml', ml + '%');
+        ev.style.setProperty('--w', w + '%');
+        ev.innerHTML =
+          `<div class="event-icon"><svg><use href="#icon-${m.icon}"/></svg></div>` +
+          `<div class="event-text">` +
+            `<div class="event-name"></div>` +
+            `<div class="event-hours">${hours}</div>` +
+          `</div>`;
+        ev.querySelector('.event-name').textContent = m.name;
+        events.appendChild(ev);
+      }
+
+      dayEl.appendChild(events);
+      schedule.appendChild(dayEl);
+    }
+
+    markPast();
+  }
 
   function markPast() {
     const now = new Date();
     document.querySelectorAll('.event').forEach(el => {
-      const end = new Date(el.dataset.end);
-      el.classList.toggle('past', now > end);
+      el.classList.toggle('past', now > new Date(el.dataset.end));
     });
     document.querySelectorAll('.day').forEach(day => {
       const evs = day.querySelectorAll('.event');
@@ -662,17 +643,26 @@
     });
   }
 
+  // ---- modal ---------------------------------------------------------------
+  const marketsByName = Object.fromEntries(MARKETS.map(m => [m.name, m]));
+  const modal = document.getElementById('modal');
+  const mName = document.getElementById('modal-name');
+  const mWhen = document.getElementById('modal-when');
+  const mArea = document.getElementById('modal-area');
+  const mStatus = document.getElementById('modal-status');
+  const mMaps = document.getElementById('modal-maps');
+  const mTag = document.getElementById('modal-tag');
+
   function openModal(el) {
-    const name = el.dataset.name;
-    const when = el.dataset.when;
-    const v = venues[name] || {};
+    const m = marketsByName[el.dataset.name] || {};
     const past = el.classList.contains('past');
 
-    mName.textContent = name;
-    mWhen.innerHTML = '<strong>When:</strong> ' + when;
-    mArea.innerHTML = '<strong>Area:</strong> ' + (v.area || 'See Google Maps');
-    mTag.textContent = v.tier || '';
-    mTag.className = 'modal-tag ' + (tierClass[v.tier] || 't-red');
+    mName.textContent = el.dataset.name;
+    mWhen.innerHTML = '<strong>When:</strong> ';
+    mWhen.appendChild(document.createTextNode(el.dataset.when));
+    mArea.innerHTML = '<strong>Area:</strong> ' + (m.area || 'See Google Maps');
+    mTag.textContent = m.tierLabel || '';
+    mTag.className = 'modal-tag t-' + (m.tier || 'red');
 
     if (past) {
       mStatus.textContent = 'This market has already passed.';
@@ -682,8 +672,7 @@
       mStatus.classList.remove('past');
     }
 
-    // universal google maps search url — opens the Maps app on iOS/Android, web on desktop
-    const query = encodeURIComponent(`${name}, ${v.area || 'California'}`);
+    const query = encodeURIComponent(`${el.dataset.name}, ${m.area || 'California'}`);
     mMaps.href = `https://www.google.com/maps/search/?api=1&query=${query}`;
 
     modal.classList.add('open');
@@ -704,9 +693,16 @@
     if (e.key === 'Escape') closeModal();
   });
 
-  markPast();
-  // re-check past status every 60s while page is open
-  setInterval(markPast, 60_000);
+  // ---- boot + keep fresh ---------------------------------------------------
+  buildMonth(new Date());
+
+  // every minute: update past-markers; if the month rolled over (page left
+  // open, or resumed from sleep), rebuild the whole schedule
+  setInterval(() => {
+    const now = new Date();
+    if (`${now.getFullYear()}-${now.getMonth()}` !== renderedMonthKey) buildMonth(now);
+    else markPast();
+  }, 60_000);
 })();
 </script>
 </body>
