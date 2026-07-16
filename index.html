@@ -215,6 +215,25 @@
     opacity: 0.65;
   }
 
+  /* divider above past days pushed to the bottom */
+  .past-divider {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    margin: 26px 0 14px;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 15px;
+    color: var(--past);
+  }
+  .past-divider.visible { display: flex; }
+  .past-divider::before, .past-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(59, 35, 20, 0.15);
+  }
+
   /* "today" marker */
   .day.today .day-label {
     box-shadow: 0 0 0 3px var(--darkbrown);
@@ -579,6 +598,12 @@
     const schedule = document.getElementById('schedule');
     schedule.innerHTML = '';
 
+    const divider = document.createElement('div');
+    divider.id = 'past-divider';
+    divider.className = 'past-divider';
+    divider.textContent = 'Earlier this month';
+    schedule.appendChild(divider);
+
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const todayStr = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
 
@@ -641,6 +666,17 @@
       const allPast = evs.length > 0 && [...evs].every(e => e.classList.contains('past'));
       day.classList.toggle('past', allPast);
     });
+
+    // upcoming days first; fully-past days sink below the divider (chronological
+    // within each group — appendChild preserves document order)
+    const schedule = document.getElementById('schedule');
+    const divider = document.getElementById('past-divider');
+    const pastDays = [...schedule.querySelectorAll('.day.past')];
+    divider.classList.toggle('visible', pastDays.length > 0);
+    if (pastDays.length) {
+      schedule.appendChild(divider);
+      pastDays.forEach(d => schedule.appendChild(d));
+    }
   }
 
   // ---- modal ---------------------------------------------------------------
