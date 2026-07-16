@@ -527,15 +527,15 @@
     <div class="legend-title">Key</div>
     <div class="legend-row">
       <div class="swatch t-blue"></div>
-      <div>Once a month — French Market Marin (2nd Sun), Inner Sunset Flea (2nd Sun, Apr–Nov), Chabot College (3rd Sat)</div>
+      <div>Once a month: French Market Marin (2nd Sun), Inner Sunset Flea (2nd Sun, Apr–Nov), Chabot College (3rd Sat)</div>
     </div>
     <div class="legend-row">
       <div class="swatch t-gold"></div>
-      <div>Weekly — Alemany, Laney College, Napa-Vallejo (Sundays); Berkeley Flea (Sat &amp; Sun)</div>
+      <div>Weekly: Alemany, Laney College, Napa-Vallejo (Sundays); Berkeley Flea (Sat &amp; Sun)</div>
     </div>
     <div class="legend-row">
       <div class="swatch t-red"></div>
-      <div>Multiple days/week — Berryessa (Fri, Sat, Sun)</div>
+      <div>Multiple days/week: Berryessa (Fri, Sat, Sun)</div>
     </div>
   </div>
 
@@ -543,7 +543,7 @@
 
   <div class="footnote">
     Schedule is generated automatically for the current month from each market's
-    recurring pattern. Markets occasionally close for holidays or weather — check
+    recurring pattern. Markets occasionally close for holidays or weather, so check
     before making a long trip.
   </div>
 </div>
@@ -591,8 +591,8 @@
 (() => {
   // ---- market data: recurrence rules --------------------------------------
   // rule types:
-  //   { weekly: [dow, ...] }                 — every week on those days (0=Sun..6=Sat)
-  //   { nth: N, dow: D, months: [m, ...] }   — Nth <weekday> of the month (months
+  //   { weekly: [dow, ...] }                 every week on those days (0=Sun..6=Sat)
+  //   { nth: N, dow: D, months: [m, ...] }   Nth <weekday> of the month (months
   //                                            optional, 0=Jan..11=Dec; omit = all year)
   // hours are 24h decimals on a 5AM–7PM timeline used for the gantt bars
   const MARKETS = [
@@ -605,7 +605,7 @@
       start: 7, end: 17,
       rule: { weekly: [5, 6, 0] },
       facts: {
-        goods: 'Thousands of vendor stalls — produce row, street food, western wear, tools, toys, electronics.',
+        goods: 'Thousands of vendor stalls: produce row, street food, western wear, tools, toys, electronics.',
         expect: 'A giant all-day bazaar with agua frescas, carnival rides, and live música. Fridays are quieter.',
         fun: 'Founded in 1960 on an old meat-packing site, "La Pulga" grew into one of the largest open-air markets in the US.',
       },
@@ -621,7 +621,7 @@
       facts: {
         goods: 'Vintage clothes, vinyl, African art and jewelry, incense, books.',
         expect: 'A South Berkeley institution with a legendary weekend drum circle.',
-        fun: 'A 1973 court ruling gave it a permanent home in the Ashby BART lot — and it survived a 2025 closure to reopen under a new lease.',
+        fun: 'A 1973 court ruling gave it a permanent home in the Ashby BART lot, and it survived a 2025 closure to reopen under a new lease.',
       },
     },
     {
@@ -634,7 +634,7 @@
       rule: { weekly: [0] },
       facts: {
         goods: 'Antiques, mid-century furniture, art, records, and genuine oddities from ~100 sellers.',
-        expect: 'Early birds get the finds — dealers scout this lot at dawn.',
+        expect: 'Early birds get the finds; dealers scout this lot at dawn.',
         fun: 'The lot is SF\'s "People\'s Market": California\'s oldest farmers market (est. 1943) runs here Saturdays, and the flea takes over Sundays.',
       },
     },
@@ -647,8 +647,8 @@
       start: 7, end: 15,
       rule: { weekly: [0] },
       facts: {
-        goods: 'Tools, electronics, produce, clothes — and seriously good street food.',
-        expect: 'Loud, packed, multicultural — one of the busiest markets in the East Bay. Bring cash.',
+        goods: 'Tools, electronics, produce, clothes, and seriously good street food.',
+        expect: 'Loud, packed, and multicultural. One of the busiest markets in the East Bay; bring cash.',
         fun: 'The food may outshine the shopping: pupusas, tamales, churros, and elote are the real headliners.',
       },
     },
@@ -662,7 +662,7 @@
       rule: { weekly: [0] },
       facts: {
         goods: 'Fresh produce, antiques, tools, and new goods from hundreds of vendors.',
-        expect: 'Gates open at 5AM — wine-country bargain hunters show up before sunrise.',
+        expect: 'Gates open at 5AM, and wine-country bargain hunters show up before sunrise.',
         fun: 'Family-owned and operated since 1960, running 50 Sundays a year, rain or shine.',
       },
     },
@@ -676,8 +676,8 @@
       rule: { nth: 2, dow: 0 },
       facts: {
         goods: '140+ booths of French and European antiques, vintage, and brocante.',
-        expect: 'Curated, Provence-style browsing — more antique fair than swap meet. Free entry and parking.',
-        fun: 'It\'s held at the Marin Civic Center — Frank Lloyd Wright\'s largest public project and his final commission.',
+        expect: 'Curated, Provence-style browsing, more antique fair than swap meet. Free entry and parking.',
+        fun: 'It\'s held at the Marin Civic Center, Frank Lloyd Wright\'s largest public project and his final commission.',
       },
     },
     {
@@ -690,7 +690,7 @@
       rule: { nth: 2, dow: 0, months: [3, 4, 5, 6, 7, 8, 9, 10] },
       facts: {
         goods: 'Local makers, vintage sellers, and food pop-ups along Irving Street.',
-        expect: 'A themed street party every month — from Garden Party to an annual pie contest in November.',
+        expect: 'A themed street party every month, from Garden Party to an annual pie contest in November.',
         fun: 'The city closes Irving St from 9th to 11th Ave for it, turning the block into a neighborhood festival.',
       },
     },
@@ -704,7 +704,7 @@
       rule: { nth: 3, dow: 6 },
       facts: {
         goods: 'Classic garage-sale treasure: tools, clothes, collectibles, plants.',
-        expect: 'A mellow campus market, rain or shine — free entry and free parking in Lot B.',
+        expect: 'A mellow campus market, rain or shine, with free entry and free parking in Lot B.',
         fun: 'It\'s run by Chabot\'s own Student Senate, with proceeds supporting student programs.',
       },
     },
@@ -756,7 +756,7 @@
     const year = now.getFullYear(), month = now.getMonth();
     renderedMonthKey = `${year}-${month}`;
 
-    document.title = `Bay Area Flea Market Guide — ${MONTHS[month]} ${year}`;
+    document.title = `Bay Area Flea Market Guide · ${MONTHS[month]} ${year}`;
     document.getElementById('subtitle').textContent = `${MONTHS[month]} ${year}`;
 
     const schedule = document.getElementById('schedule');
@@ -832,7 +832,7 @@
     });
 
     // upcoming days first; fully-past days sink below the divider (chronological
-    // within each group — appendChild preserves document order)
+    // within each group; appendChild preserves document order)
     const schedule = document.getElementById('schedule');
     const divider = document.getElementById('past-divider');
     const pastDays = [...schedule.querySelectorAll('.day.past')];
@@ -942,7 +942,7 @@
       mStatus.textContent = 'This market has already passed.';
       mStatus.classList.add('past');
     } else {
-      mStatus.textContent = 'Upcoming — tap below for directions.';
+      mStatus.textContent = 'Upcoming. Tap below for directions.';
       mStatus.classList.remove('past');
     }
 
