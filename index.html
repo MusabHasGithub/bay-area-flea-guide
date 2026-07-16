@@ -258,7 +258,9 @@
     z-index: 900;
     inset: 0 auto auto 0;
     pointer-events: none;
+    visibility: hidden;
   }
+  .qf.show { visibility: visible; }
   .qf-arrow {
     position: fixed;
     overflow: visible;
@@ -269,8 +271,9 @@
     stroke-width: 3;
     stroke-linecap: round;
     stroke-linejoin: round;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
+    /* --len is the measured path length, set from JS on each show */
+    stroke-dasharray: var(--len, 0);
+    stroke-dashoffset: var(--len, 0);
   }
   .qf.show .qf-arrow .qf-line {
     transition: stroke-dashoffset .3s ease-out;
@@ -563,9 +566,9 @@
 
 <!-- hover quick-facts -->
 <div id="qf" class="qf" aria-hidden="true">
-  <svg id="qf-arrow" class="qf-arrow" viewBox="0 0 100 60" preserveAspectRatio="none">
-    <path class="qf-line" pathLength="1" d="M4,44 C30,50 55,8 96,26" vector-effect="non-scaling-stroke"/>
-    <path class="qf-head" pathLength="1" d="M82,16 L96,26 L80,36" vector-effect="non-scaling-stroke"/>
+  <svg id="qf-arrow" class="qf-arrow" viewBox="0 0 100 60" width="0" height="0">
+    <path class="qf-line" d=""/>
+    <path class="qf-head" d=""/>
   </svg>
   <div id="qf-card" class="qf-card">
     <div class="qf-title">Quick facts</div>
@@ -922,14 +925,22 @@
     qfCard.style.left = cardX + 'px';
     qfCard.style.top = cardY + 'px';
 
-    // arrow: stretches across the gap from the bar to the card
-    const gap = cardX - r.right - 10;
+    // arrow: drawn to fit the gap between the bar and the card (no stretching)
+    const gap = Math.round(cardX - r.right - 10);
     if (gap > 24) {
+      const w = gap;
+      qfArrow.setAttribute('viewBox', `0 0 ${w} 60`);
+      qfArrow.setAttribute('width', w);
+      qfArrow.setAttribute('height', 60);
+      const line = qfArrow.querySelector('.qf-line');
+      const head = qfArrow.querySelector('.qf-head');
+      line.setAttribute('d', `M4,44 C${Math.round(w * 0.35)},52 ${Math.round(w * 0.6)},6 ${w - 6},24`);
+      head.setAttribute('d', `M${w - 18},14 L${w - 6},24 L${w - 20},34`);
+      line.style.setProperty('--len', line.getTotalLength().toFixed(1));
+      head.style.setProperty('--len', head.getTotalLength().toFixed(1));
       qfArrow.style.display = 'block';
       qfArrow.style.left = (r.right + 4) + 'px';
       qfArrow.style.top = (r.top + r.height / 2 - 44) + 'px';
-      qfArrow.style.width = gap + 'px';
-      qfArrow.style.height = '60px';
     } else {
       qfArrow.style.display = 'none';
     }
