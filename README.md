@@ -2,7 +2,7 @@
 
 A self-updating, single-file guide to Bay Area flea markets.
 
-**Live site: [musabhasgithub.github.io/bay-area-flea-guide](https://musabhasgithub.github.io/bay-area-flea-guide/)**
+**Live site: [mozetech.github.io/bay-area-flea-guide](https://mozetech.github.io/bay-area-flea-guide/)**
 
 Every month the schedule regenerates itself in the browser from each market's
 recurring pattern (every Sunday, 2nd Sunday of the month, 3rd Saturday, and so
@@ -29,7 +29,7 @@ on), so nobody has to update dates by hand. Ever.
 There is no build step. Clone and open the file:
 
 ```sh
-git clone https://github.com/MusabHasGithub/bay-area-flea-guide.git
+git clone https://github.com/mozetech/bay-area-flea-guide.git
 open bay-area-flea-guide/index.html
 ```
 
