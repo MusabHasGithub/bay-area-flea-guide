@@ -239,6 +239,75 @@
     box-shadow: 0 0 0 3px var(--darkbrown);
   }
 
+  /* hover quick-facts: hand-drawn arrow + tilted card */
+  .qf {
+    position: fixed;
+    z-index: 900;
+    inset: 0 auto auto 0;
+    pointer-events: none;
+  }
+  .qf-arrow {
+    position: fixed;
+    overflow: visible;
+  }
+  .qf-arrow path {
+    fill: none;
+    stroke: var(--darkbrown);
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .qf.show .qf-arrow .qf-line {
+    transition: stroke-dashoffset .3s ease-out;
+    stroke-dashoffset: 0;
+  }
+  .qf.show .qf-arrow .qf-head {
+    transition: stroke-dashoffset .12s ease-out .26s;
+    stroke-dashoffset: 0;
+  }
+  .qf-card {
+    position: fixed;
+    width: 280px;
+    background: var(--cream);
+    border: 2px solid var(--darkbrown);
+    border-radius: 14px 16px 14px 18px;
+    padding: 14px 16px;
+    box-shadow: 4px 5px 0 rgba(59, 35, 20, 0.22);
+    transform: rotate(-1.4deg) scale(0.92);
+    opacity: 0;
+  }
+  .qf.show .qf-card {
+    transition: opacity .18s ease .2s, transform .18s cubic-bezier(.34,1.56,.64,1) .2s;
+    opacity: 1;
+    transform: rotate(-1.4deg) scale(1);
+  }
+  .qf-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--orange);
+    margin-bottom: 8px;
+  }
+  .qf-row {
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: var(--midbrown);
+    margin-bottom: 7px;
+  }
+  .qf-row:last-child { margin-bottom: 0; }
+  .qf-row strong {
+    color: var(--darkbrown);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 10.5px;
+    letter-spacing: 0.8px;
+    display: block;
+    margin-bottom: 1px;
+  }
+
   /* modal */
   .modal {
     position: fixed; inset: 0; z-index: 1000;
@@ -479,6 +548,20 @@
   </div>
 </div>
 
+<!-- hover quick-facts -->
+<div id="qf" class="qf" aria-hidden="true">
+  <svg id="qf-arrow" class="qf-arrow" viewBox="0 0 100 60" preserveAspectRatio="none">
+    <path class="qf-line" pathLength="1" d="M4,44 C30,50 55,8 96,26" vector-effect="non-scaling-stroke"/>
+    <path class="qf-head" pathLength="1" d="M82,16 L96,26 L80,36" vector-effect="non-scaling-stroke"/>
+  </svg>
+  <div id="qf-card" class="qf-card">
+    <div class="qf-title">Quick facts</div>
+    <div class="qf-row"><strong>What's there</strong> <span id="qf-goods"></span></div>
+    <div class="qf-row"><strong>What to expect</strong> <span id="qf-expect"></span></div>
+    <div class="qf-row"><strong>Cool fact</strong> <span id="qf-fun"></span></div>
+  </div>
+</div>
+
 <!-- modal -->
 <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-backdrop" data-close></div>
@@ -488,6 +571,9 @@
     <h3 id="modal-name" class="modal-name"></h3>
     <div id="modal-when" class="modal-row"></div>
     <div id="modal-area" class="modal-row"></div>
+    <div id="modal-goods" class="modal-row"></div>
+    <div id="modal-expect" class="modal-row"></div>
+    <div id="modal-fun" class="modal-row"></div>
     <div id="modal-status" class="modal-status"></div>
     <a id="modal-maps" class="modal-maps" target="_blank" rel="noopener noreferrer">
       <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#icon-maps"/></svg>
@@ -518,6 +604,11 @@
       icon: 'storefront',
       start: 7, end: 17,
       rule: { weekly: [5, 6, 0] },
+      facts: {
+        goods: 'Thousands of vendor stalls — produce row, street food, western wear, tools, toys, electronics.',
+        expect: 'A giant all-day bazaar with agua frescas, carnival rides, and live música. Fridays are quieter.',
+        fun: 'Founded in 1960 on an old meat-packing site, "La Pulga" grew into one of the largest open-air markets in the US.',
+      },
     },
     {
       name: 'Berkeley Flea Market',
@@ -525,8 +616,13 @@
       site: 'https://berkeleyfleamarket.com/',
       tier: 'gold', tierLabel: 'Every Sat & Sun',
       icon: 'california',
-      start: 7, end: 19,
+      start: 9, end: 17,
       rule: { weekly: [6, 0] },
+      facts: {
+        goods: 'Vintage clothes, vinyl, African art and jewelry, incense, books.',
+        expect: 'A South Berkeley institution with a legendary weekend drum circle.',
+        fun: 'A 1973 court ruling gave it a permanent home in the Ashby BART lot — and it survived a 2025 closure to reopen under a new lease.',
+      },
     },
     {
       name: 'Alemany Flea Market',
@@ -536,6 +632,11 @@
       icon: 'pin',
       start: 7, end: 15,
       rule: { weekly: [0] },
+      facts: {
+        goods: 'Antiques, mid-century furniture, art, records, and genuine oddities from ~100 sellers.',
+        expect: 'Early birds get the finds — dealers scout this lot at dawn.',
+        fun: 'The lot is SF\'s "People\'s Market": California\'s oldest farmers market (est. 1943) runs here Saturdays, and the flea takes over Sundays.',
+      },
     },
     {
       name: 'Laney College Flea Market',
@@ -545,6 +646,11 @@
       icon: 'cap',
       start: 7, end: 15,
       rule: { weekly: [0] },
+      facts: {
+        goods: 'Tools, electronics, produce, clothes — and seriously good street food.',
+        expect: 'Loud, packed, multicultural — one of the busiest markets in the East Bay. Bring cash.',
+        fun: 'The food may outshine the shopping: pupusas, tamales, churros, and elote are the real headliners.',
+      },
     },
     {
       name: 'Napa-Vallejo Flea Market',
@@ -554,6 +660,11 @@
       icon: 'bag',
       start: 5, end: 17,
       rule: { weekly: [0] },
+      facts: {
+        goods: 'Fresh produce, antiques, tools, and new goods from hundreds of vendors.',
+        expect: 'Gates open at 5AM — wine-country bargain hunters show up before sunrise.',
+        fun: 'Family-owned and operated since 1960, running 50 Sundays a year, rain or shine.',
+      },
     },
     {
       name: 'The French Market Marin',
@@ -563,6 +674,11 @@
       icon: 'utensils',
       start: 9, end: 15,
       rule: { nth: 2, dow: 0 },
+      facts: {
+        goods: '140+ booths of French and European antiques, vintage, and brocante.',
+        expect: 'Curated, Provence-style browsing — more antique fair than swap meet. Free entry and parking.',
+        fun: 'It\'s held at the Marin Civic Center — Frank Lloyd Wright\'s largest public project and his final commission.',
+      },
     },
     {
       name: 'Inner Sunset Flea',
@@ -572,6 +688,11 @@
       icon: 'sun',
       start: 10, end: 16,
       rule: { nth: 2, dow: 0, months: [3, 4, 5, 6, 7, 8, 9, 10] },
+      facts: {
+        goods: 'Local makers, vintage sellers, and food pop-ups along Irving Street.',
+        expect: 'A themed street party every month — from Garden Party to an annual pie contest in November.',
+        fun: 'The city closes Irving St from 9th to 11th Ave for it, turning the block into a neighborhood festival.',
+      },
     },
     {
       name: 'Chabot College Flea Market',
@@ -581,6 +702,11 @@
       icon: 'bag',
       start: 8, end: 15,
       rule: { nth: 3, dow: 6 },
+      facts: {
+        goods: 'Classic garage-sale treasure: tools, clothes, collectibles, plants.',
+        expect: 'A mellow campus market, rain or shine — free entry and free parking in Lot B.',
+        fun: 'It\'s run by Chabot\'s own Student Senate, with proceeds supporting student programs.',
+      },
     },
   ];
 
@@ -717,6 +843,67 @@
     }
   }
 
+  // ---- hover quick-facts ----------------------------------------------------
+  const qf = document.getElementById('qf');
+  const qfArrow = document.getElementById('qf-arrow');
+  const qfCard = document.getElementById('qf-card');
+  const qfGoods = document.getElementById('qf-goods');
+  const qfExpect = document.getElementById('qf-expect');
+  const qfFun = document.getElementById('qf-fun');
+  const canHover = matchMedia('(hover: hover) and (pointer: fine)');
+
+  function showQuickFacts(el) {
+    const m = marketsByName[el.dataset.name];
+    if (!m || !m.facts) return;
+
+    qfGoods.textContent = m.facts.goods;
+    qfExpect.textContent = m.facts.expect;
+    qfFun.textContent = m.facts.fun;
+
+    const r = el.getBoundingClientRect();
+    const cardW = 280, pad = 12;
+    const cardH = qfCard.offsetHeight || 180;
+
+    // card: to the right of the bar's end, clamped to the viewport
+    const cardX = Math.min(r.right + 84, innerWidth - cardW - pad);
+    const cardY = Math.max(pad, Math.min(r.top + r.height / 2 - cardH / 2,
+                                         innerHeight - cardH - pad));
+    qfCard.style.left = cardX + 'px';
+    qfCard.style.top = cardY + 'px';
+
+    // arrow: stretches across the gap from the bar to the card
+    const gap = cardX - r.right - 10;
+    if (gap > 24) {
+      qfArrow.style.display = 'block';
+      qfArrow.style.left = (r.right + 4) + 'px';
+      qfArrow.style.top = (r.top + r.height / 2 - 44) + 'px';
+      qfArrow.style.width = gap + 'px';
+      qfArrow.style.height = '60px';
+    } else {
+      qfArrow.style.display = 'none';
+    }
+
+    // restart the draw-in animation
+    qf.classList.remove('show');
+    void qf.offsetWidth;
+    qf.classList.add('show');
+  }
+
+  function hideQuickFacts() {
+    qf.classList.remove('show');
+  }
+
+  document.addEventListener('mouseover', (e) => {
+    if (!canHover.matches) return;
+    const ev = e.target.closest('.event');
+    if (ev) showQuickFacts(ev);
+  });
+  document.addEventListener('mouseout', (e) => {
+    const ev = e.target.closest('.event');
+    if (ev && !ev.contains(e.relatedTarget)) hideQuickFacts();
+  });
+  document.addEventListener('scroll', hideQuickFacts, { passive: true });
+
   // ---- modal ---------------------------------------------------------------
   const marketsByName = Object.fromEntries(MARKETS.map(m => [m.name, m]));
   const modal = document.getElementById('modal');
@@ -729,10 +916,22 @@
   const mTag = document.getElementById('modal-tag');
 
   function openModal(el) {
+    hideQuickFacts();
     const m = marketsByName[el.dataset.name] || {};
     const past = el.classList.contains('past');
 
     mName.textContent = el.dataset.name;
+    const fillFact = (id, label, text) => {
+      const row = document.getElementById(id);
+      row.style.display = text ? '' : 'none';
+      if (text) {
+        row.innerHTML = `<strong>${label}:</strong> `;
+        row.appendChild(document.createTextNode(text));
+      }
+    };
+    fillFact('modal-goods', "What's there", m.facts && m.facts.goods);
+    fillFact('modal-expect', 'Expect', m.facts && m.facts.expect);
+    fillFact('modal-fun', 'Cool fact', m.facts && m.facts.fun);
     mWhen.innerHTML = '<strong>When:</strong> ';
     mWhen.appendChild(document.createTextNode(el.dataset.when));
     mArea.innerHTML = '<strong>Area:</strong> ' + (m.area || 'See Google Maps');
